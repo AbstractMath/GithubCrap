@@ -73,3 +73,27 @@
 /processorParam:TextureFormat=Color
 /build:Tilemapvarious.png
 
+#begin Audio/Effects/menu_cancel.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/menu_cancel.ogg
+
+#begin Audio/Effects/menu_ok.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/menu_ok.ogg
+
+#begin Audio/Music/Wander_01.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/Music/Wander_01.mp3
+
+#begin Audio/Effects/wind_howl_1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/wind_howl_1.ogg
+

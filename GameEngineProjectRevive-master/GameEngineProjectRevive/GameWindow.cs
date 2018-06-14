@@ -5,6 +5,10 @@ using GameEngineProjectRevive.Objects;
 using GameEngineProjectRevive.Physics;
 using System;
 using System.Collections.Generic;
+using GameEngineProjectRevive.Audio;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
+using System.Diagnostics;
 
 namespace GameEngineProjectRevive
 {
@@ -44,6 +48,8 @@ namespace GameEngineProjectRevive
         Vector2 tp = new Vector2(100, 20);
         Vector2 tp2 = new Vector2(0, 0);
 
+        AudioManager audioManager;
+
         public GameWindow()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -62,6 +68,8 @@ namespace GameEngineProjectRevive
         {
             // TODO: Add your initialization logic here
             activeCamera = new Camera();
+
+            audioManager = new AudioManager();
 
             base.Initialize();
         }
@@ -130,6 +138,14 @@ namespace GameEngineProjectRevive
             TestCollider = new TileCollider();
             TestCollider.Map = testMap;
             TestCollider.TileSize = testMap.TileSets[0].TileHeight;
+
+            audioManager.LoadContent(Content);
+            SoundEffect windHowl = audioManager.LoadSoundEffect("wind_howl_1", Content);
+            SoundEffectInstance windInstance = audioManager.MakeEmitter(windHowl, new Vector3(699f,312f,0f));
+            windInstance.IsLooped = true;
+            windInstance.Play();
+            //test spatial audio emmiters
+            
         }
 
         /// <summary>
@@ -178,9 +194,39 @@ namespace GameEngineProjectRevive
             }
             state = Mouse.GetState();
 
+            // Audio Test
+            if (GetSingleKeyboardPress(Keys.K))
+            {
+                audioManager.PlaySystemSound(SystemSound.OK);
+            }
+
+            if (GetSingleKeyboardPress(Keys.L))
+            {
+                audioManager.PlaySystemSound(SystemSound.CANCEL);
+            }
+
+            // Spatial audio test
+            if (GetSingleKeyboardPress(Keys.N))
+            {
+                Vector3 currentListenerPosition = audioManager.GetListenerPosition();
+                audioManager.SetListenerPosition(new Vector2(currentListenerPosition.X - 0.01f, currentListenerPosition.Y));
+            }
+
+            if (GetSingleKeyboardPress(Keys.M))
+            {
+                Vector3 currentListenerPosition = audioManager.GetListenerPosition();
+                audioManager.SetListenerPosition(new Vector2(currentListenerPosition.X + 0.01f, currentListenerPosition.Y));
+            }
+
             tp2 = new Vector2(state.Position.X, state.Position.Y) + activeCamera.GlobalTranslation;
             container2.Translation = tp2;
+            Debug.WriteLine ("cursor at: " + tp2.X + ", " + tp2.Y);
+
+            audioManager.SetListenerPosition(tp2);
             // TODO: Add your update logic here
+
+
+            OldState = Keyboard.GetState();
 
             base.Update(gameTime);
         }
@@ -217,6 +263,20 @@ namespace GameEngineProjectRevive
             //GameWindow.DrawLine(new Vector2(40, 70), new Vector2(1000, 2000), Color.White, activeCamera, spriteBatch);
 
             base.Draw(gameTime);
+        }
+
+        KeyboardState OldState;
+
+        private bool GetSingleKeyboardPress (Keys key) {
+
+            KeyboardState newState = Keyboard.GetState();
+            bool result = false;
+
+            if(newState.IsKeyDown(key) && !OldState.IsKeyDown (key)) {
+                result =  true;
+            } 
+
+            return result;
         }
     }
 }
