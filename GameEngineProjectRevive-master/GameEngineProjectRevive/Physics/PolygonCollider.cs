@@ -9,7 +9,7 @@ namespace GameEngineProjectRevive.Physics
 {
     public class PolygonCollider : IColliderGroup
     {
-        private Polygon Collider; //this is going to be private until otherwise specified
+        public Polygon Collider { get; private set;  } 
 
         public Tuple<bool, Vector2> CheckForCollision(IColliderGroup other, Vector2 thisPosition, Vector2 otherPosition, Vector2 thisSize, Vector2 otherSize)
         {

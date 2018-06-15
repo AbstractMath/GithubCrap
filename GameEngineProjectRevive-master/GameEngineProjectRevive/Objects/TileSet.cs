@@ -49,37 +49,52 @@ namespace GameEngineProjectRevive.Objects
             Width = int.Parse(mainNode.ChildNodes[0].Attributes[1].Value);
             Height = int.Parse(mainNode.ChildNodes[0].Attributes[2].Value);
 
+            CollisionShapes = new Dictionary<int, PolygonCollider>();
+
             //Now parse stuff involving the collision shapes as well as the tile animations.
             //Console.WriteLine(mainNode.ChildNodes[2].ChildNodes[0].Name);
             for (int i = 2; i < mainNode.ChildNodes.Count; i++)
             {
+                int id = int.Parse(mainNode.ChildNodes[i].Attributes[0].Value);
+                
                 if (mainNode.ChildNodes[i].ChildNodes[0].Name == "objectgroup")
                 {
-                    //id -> 0
                     //x -> 1
                     //y -> 2
 
                     float x = float.Parse(mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].Attributes[1].Value);
                     float y = float.Parse(mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].Attributes[2].Value);
+                    Polygon ColliderShape = new Polygon();
 
-                    //Console.WriteLine(mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].Name);
-
-                    //Console.WriteLine(mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].Attributes[2].Value);
                     if (mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].ChildNodes.Count > 0)
                     {
                         //Polyline
-                        Console.WriteLine(mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].ChildNodes[0].Attributes[0].Value);
                         //Just load all the points and add them to the offset vector, so that way it's where it should be
                         string[] pairs = mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].ChildNodes[0].Attributes[0].Value.Split(' ');
                         
                         for (int j = 0; j < pairs.Length; j++)
                         {
+                            string[] Coords = pairs[j].Split(',');
+                            float xC = x + float.Parse(Coords[0]);
+                            float yC = y + float.Parse(Coords[1]);
 
+                            ColliderShape.addPoint(new Vector2(xC, yC));
                         }
+
+                        CollisionShapes.Add(id, new PolygonCollider(ColliderShape));
                     }
                     else
                     {
+                        //Rectangular
+                        float Width = float.Parse(mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].Attributes[3].Value);
+                        float Height = float.Parse(mainNode.ChildNodes[i].ChildNodes[0].ChildNodes[0].Attributes[4].Value);
 
+                        ColliderShape.addPoint(new Vector2(x, y));
+                        ColliderShape.addPoint(new Vector2(x + Width, y));
+                        ColliderShape.addPoint(new Vector2(x + Width, y + Height));
+                        ColliderShape.addPoint(new Vector2(x, y + Height));
+
+                        CollisionShapes.Add(id, new PolygonCollider(ColliderShape));
                     }
                 }
             }

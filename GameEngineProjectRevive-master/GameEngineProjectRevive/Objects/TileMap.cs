@@ -75,6 +75,21 @@ namespace GameEngineProjectRevive.Objects
             }
         }
 
+        public TileSet GetTileSet(int id)
+        {
+            int tileSetID = 0;
+
+            for (int i = 0; i < TileSets.Length; i++)
+            {
+                if (id + 1 >= TileSets[i].StartingId)
+                {
+                    tileSetID = i;
+                }
+            }
+
+            return TileSets[tileSetID];
+        }
+
         public TileMap(string TilePath, int layerID, ContentManager content)//This should probably have some kind of overload to load tilesets externally, saving a little memory.
         {
             XmlDocument TileDoc = new XmlDocument();

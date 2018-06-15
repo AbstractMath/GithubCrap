@@ -220,7 +220,7 @@ namespace GameEngineProjectRevive
 
             tp2 = new Vector2(state.Position.X, state.Position.Y) + activeCamera.GlobalTranslation;
             container2.Translation = tp2;
-            Debug.WriteLine ("cursor at: " + tp2.X + ", " + tp2.Y);
+            //Debug.WriteLine ("cursor at: " + tp2.X + ", " + tp2.Y);
 
             audioManager.SetListenerPosition(tp2);
             // TODO: Add your update logic here
@@ -245,19 +245,20 @@ namespace GameEngineProjectRevive
             //physicsTree.Draw(Color.Blue, spriteBatch, activeCamera);
             LinkedList<Tuple<PhysicsObject, Vector2>> Colliding = obj1.getColliding();
             //Tuple<bool, Vector2> CollidingTile = TestCollider.CheckForCollision(obj2.Collider, testMap.Translation, obj2.Position, new Vector2(1, 1), new Vector2(1, 1));
-            Tuple<bool, Vector2> CollidingTile = obj2.Collider.CheckForCollision(TestCollider, obj2.Position, testMap.Translation, new Vector2(1, 1), new Vector2(1, 1));
+            Tuple<bool, Vector2> CollidingTile = obj2.Collider.CheckForCollision(obj1.Collider, b2.RelativeColliderPosition + b2.Position, b1.Position, new Vector2(1, 1), new Vector2(1, 1));
 
             Color drawColor = CollidingTile.Item1 ? Color.Red : Color.Black;//Colliding.Count != 0 ? Color.Red : Color.Black;
 
             //b2.Draw(drawColor, spriteBatch, activeCamera);
             //b1.Draw(drawColor, spriteBatch, activeCamera);
-            /*spriteBatch.Begin();
+            spriteBatch.Begin();
             GameWindow.DrawLine(TestCollider.Corner0, TestCollider.Corner1, Color.Red, activeCamera, spriteBatch);
-            spriteBatch.End();*/
+            spriteBatch.End();
             //The upper three lines are for debugging tile collisions
 
             obj2.BoundingShape.Draw(Color.Wheat, spriteBatch, activeCamera);
-            testPoly.Draw(Color.White, b1.RelativeColliderPosition + b1.Position, spriteBatch, activeCamera, new Vector2(1, 1));
+            testPoly.Draw(Color.White, b1.Position, spriteBatch, activeCamera, new Vector2(1, 1));
+
             testPoly2.Draw(drawColor, b2.RelativeColliderPosition + b2.Position, spriteBatch, activeCamera, new Vector2(1, 1));
 
             //GameWindow.DrawLine(new Vector2(40, 70), new Vector2(1000, 2000), Color.White, activeCamera, spriteBatch);

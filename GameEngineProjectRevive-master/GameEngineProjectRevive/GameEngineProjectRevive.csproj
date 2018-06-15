@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="GameWindow.cs" />
     <Compile Include="Interfaces\IColliderGroup.cs" />
     <Compile Include="Interfaces\ICollider.cs" />

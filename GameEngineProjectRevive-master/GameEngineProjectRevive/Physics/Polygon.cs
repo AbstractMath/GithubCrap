@@ -15,6 +15,11 @@ namespace GameEngineProjectRevive.Physics
             return base.IsColliding(thisPosition - otherPosition, new SupportDelegate(other.Support), Scale1, Scale2);
         }
 
+        public override Tuple<bool, Simplex> CheckForCollision(ColliderElement other, Vector2 thisPosition, Vector2 otherPosition, Vector2 Scale1, Vector2 Scale2, FlipProperties flipType, Vector2 flipPoint)
+        {
+            return base.IsColliding(thisPosition - otherPosition, new SupportDelegate(other.Support), Scale1, Scale2, flipType, flipPoint);
+        }
+
         public override Tuple<bool, Vector2> GetCollisionData(ColliderElement other, Vector2 thisPosition, Vector2 otherPosition, Vector2 Scale1, Vector2 Scale2)
         {
             Tuple<bool, Simplex> DidCollide = CheckForCollision(other, thisPosition, otherPosition, Scale1, Scale2);
@@ -22,6 +27,20 @@ namespace GameEngineProjectRevive.Physics
             if (DidCollide.Item1)
             {
                 return new Tuple<bool, Vector2>(true, GetCollisionDepth(DidCollide.Item2, other, thisPosition, otherPosition, Scale1, Scale2));
+            }
+            else
+            {
+                return new Tuple<bool, Vector2>(false, new Vector2(0, 0));
+            }
+        }
+
+        public override Tuple<bool, Vector2> GetCollisionData(ColliderElement other, Vector2 thisPosition, Vector2 otherPosition, Vector2 Scale1, Vector2 Scale2, FlipProperties flipType, Vector2 flipPoint)
+        {
+            Tuple<bool, Simplex> DidCollide = CheckForCollision(other, thisPosition, otherPosition, Scale1, Scale2, flipType, flipPoint);
+
+            if (DidCollide.Item1)
+            {
+                return new Tuple<bool, Vector2>(true, GetCollisionDepth(DidCollide.Item2, other, thisPosition, otherPosition, Scale1, Scale2, flipType, flipPoint));
             }
             else
             {
@@ -72,6 +91,11 @@ namespace GameEngineProjectRevive.Physics
         public override Vector2 GetCollisionDepth(Simplex simp, ColliderElement other, Vector2 thisPosition, Vector2 otherPosition, Vector2 Scale1, Vector2 Scale2)
         {
             return base.GetPenetrationDepth(simp, new SupportDelegate(other.Support), thisPosition - otherPosition, Scale1, Scale2);
+        }
+
+        public override Vector2 GetCollisionDepth(Simplex simp, ColliderElement other, Vector2 thisPosition, Vector2 otherPosition, Vector2 Scale1, Vector2 Scale2, FlipProperties flipType, Vector2 flipPoint)
+        {
+            return base.GetPenetrationDepth(simp, new SupportDelegate(other.Support), thisPosition - otherPosition, Scale1, Scale2, flipType, flipPoint);
         }
 
         public override Vector2 Support(Vector2 direction)
